@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ Franchise + Analyse 360</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 14px;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .api-key-banner {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      margin: 16px 30px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #92400e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .api-key-banner input {
+      padding: 6px 10px;
+      border: 1px solid #f59e0b;
+      border-radius: 4px;
+      font-size: 12px;
+      width: 300px;
+    }
+
+    .search-box {
+      padding: 30px;
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: #667eea;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      padding: 40px 30px;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i {
+      color: #667eea;
+      font-size: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      margin-bottom: -2px;
+    }
+
+    .tab-btn.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .tab-btn:hover {
+      color: #667eea;
+    }
+
+    .faq-item {
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 14px 16px;
+      background: #f9fafb;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      color: #1f2937;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    .faq-question:hover {
+      background: #f3f4f6;
+    }
+
+    .faq-question.open {
+      background: #ede9fe;
+      color: #667eea;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s;
+      padding: 0 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+
+    .faq-answer.open {
+      max-height: 800px;
+      padding: 16px;
+      background: white;
+    }
+
+    .document-item {
+      padding: 16px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+    }
+
+    .document-item:hover {
+      background: #f3f4f6;
+      border-color: #667eea;
+    }
+
+    .document-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1f2937;
+    }
+
+    .document-desc {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .download-btn {
+      padding: 8px 16px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .download-btn:hover {
+      background: #764ba2;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      color: #1f2937;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .analyze-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .analyze-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .analyze-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .analysis-result {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      border-radius: 8px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .analysis-result.show {
+      display: block;
+    }
+
+    .analysis-result h3 {
+      color: #166534;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .analysis-result.error {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    .analysis-result.error h3 {
+      color: #dc2626;
+    }
+
+    .result-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #bbf7d0;
+      font-size: 14px;
+      color: #166534;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-weight: 600;
+      color: #15803d;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #0369a1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+      margin-right: 4px;
+    }
+
+    .source-text {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 0.5px solid #e5e7eb;
+      font-size: 12px;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    .footer {
+      background: #f9fafb;
+      padding: 20px 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #6b7280;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e5e7eb;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>📚 FAQ Franchise + Analyse 360</h1>
+    <p>Guide interactif pour étudiants et futurs franchisés</p>
+  </header>
+
+
+
+  <div class="search-box">
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Recherche (ex: coût, secteur, accompagnement, territoire...)"
+    >
+  </div>
+
+  <div class="content">
+    <!-- ONGLET 1: FAQ -->
+    <div class="section active" id="faqSection">
+      <div class="section-title">
+        <i class="fas fa-question-circle"></i> Questions fréquentes
+      </div>
+      <div id="faqList"></div>
+      <div id="noResults" class="no-results" style="display: none;">
+        Aucune réponse trouvée pour cette recherche.
+      </div>
+    </div>
+
+    <!-- ONGLET 2: RESSOURCES -->
+    <div class="section" id="documentsSection">
+      <div class="section-title">
+        <i class="fas fa-link"></i> Ressources essentielles
+      </div>
+      <div id="documentsList"></div>
+    </div>
+
+
+  </div>
+
+  <!-- BOUTONS DE NAVIGATION -->
+  <div class="tabs" style="padding: 0 30px; margin-top: 30px; border-bottom: 2px solid #e5e7eb;">
+    <button class="tab-btn active" onclick="switchTab('faqSection', this)">
+      <i class="fas fa-question-circle"></i> FAQ
+    </button>
+    <button class="tab-btn" onclick="switchTab('documentsSection', this)">
+      <i class="fas fa-link"></i> Ressources
+    </button>
+
+  </div>
+
+  <div class="footer">
+    <p>💡 Ressources basées sur la Fédération Française de la Franchise | <a href="https://www.franchise-fff.com" target="_blank" style="color: #667eea; text-decoration: none;">FFF.com</a></p>
+    <p style="margin-top: 8px; font-size: 11px;">FAQ + Ressources externes • Gratuit • Offline</p>
+  </div>
+</div>
+
+<script>
+  const faqData = [
+    {
+      q: "Qu'est-ce qu'une franchise ?",
+      a: "La franchise est un modèle commercial où un franchiseur autorise un franchisé à exploiter son concept (marque, savoir-faire) moyennant une redevance. Le franchisé reste indépendant mais utilise les outils et l'accompagnement du réseau.",
+      tags: ["concept", "base"],
+      source: "Guide FFF 2025 + Service Public Entreprendre"
+    },
+    {
+      q: "Quel est le coût moyen pour devenir franchisé ?",
+      a: "Le coût varie énormément : de 20 000€ (services) à 300 000€+ (restauration, équipement). Il comprend : droit d'entrée (3 000-50 000€), local, aménagement, stock initial, trésorerie de départ. Vérifiez le DIP pour le détail.",
+      tags: ["coût", "investissement", "budget"],
+      source: "22e Enquête Banque Populaire/FFF 2026 + TGS France"
+    },
+    {
+      q: "Quels sont les secteurs porteurs en 2026 ?",
+      a: "Secteurs dynamiques : restauration rapide (+croissance), bâtiment/énergie (+7,4% CA 2025), commerce spécialisé (nutrition, fitness), services aux personnes. L'alimentaire reste leader. La franchise progresse dans la distribution classique.",
+      tags: ["secteur", "marché", "tendance"],
+      source: "Indicateurs clés FFF 2025 + Observatoire de la Franchise"
+    },
+    {
+      q: "Qu'est-ce que le DIP (Document d'Information Précontractuelle) ?",
+      a: "Document obligatoire remis 20 jours avant signature du contrat. Il détaille : identité du franchiseur, expérience, réseau, conditions financières, durée, obligations, conflits récents. À lire attentivement avant engagement.",
+      tags: ["DIP", "contrat", "legal", "obligations"],
+      source: "Service Public Entreprendre + Guide FFF 2025"
+    },
+    {
+      q: "Comment évaluer la viabilité d'une franchise ?",
+      a: "Critères clés : 1) Antériorité du concept (>3 ans), 2) Réseau stable/en croissance, 3) CA/rentabilité des unités comparables transparents, 4) Accompagnement solide (formation, animation), 5) Territoire disponible et marché local viable.",
+      tags: ["évaluation", "risques", "critères"],
+      source: "Thèse Catherine Goullet + Les savoir-faire en franchise (FFF)"
+    },
+    {
+      q: "Quel accompagnement dois-je attendre du franchiseur ?",
+      a: "Standard : formation initiale (2-4 semaines), assistance à l'ouverture, animations réseau, mise à jour du concept, support commercial/RH. Qualité variable selon l'enseigne. À vérifier dans le DIP et auprès des franchisés existants.",
+      tags: ["accompagnement", "support", "formation"],
+      source: "Certificat FFF Animation de réseau + Mini-synthèse dynamique collective"
+    },
+    {
+      q: "Comment sont structurées les charges récurrentes ?",
+      a: "Royalties : 5-8% du CA mensuel (classique). Fonds de commerce : 1-2% (pub collective). Logiciels/data : frais forfaitaires. Approvisionnements imposés : certains réseaux obligent fournisseur unique. Demandez le détail financier détaillé.",
+      tags: ["royalties", "charges", "coûts"],
+      source: "22e Enquête FFF + DIP (vérification contractuelle)"
+    },
+    {
+      q: "La franchise est-elle adaptée à la Réunion ?",
+      a: "Oui, mais offre réduite. Secteurs présents : restauration (Subway, Heiko), sport/nutrition (FitnessBoutique), bâtiment. Vérifiez auprès de chaque réseau son intérêt pour l'île. Exclusivité territoriale souvent négociable pour petits marchés.",
+      tags: ["Réunion", "territoire", "marché local"],
+      source: "Veille Réunion 2026 (ressources PDF) + Observatoire"
+    },
+    {
+      q: "Quelles compétences faut-il avoir pour réussir en franchise ?",
+      a: "Essentielles : gestion commerciale, management d'équipe, rigueur opérationnelle. La marque/savoir-faire sont fournis. Important : respect du concept, implication personnelle, ouverture à la formation continue et à l'animation réseau.",
+      tags: ["compétences", "management", "profil"],
+      source: "Certificat FFF + Thèse Romain Weigel (internationalisation)"
+    },
+    {
+      q: "Comment fonctionne l'animation du réseau ?",
+      a: "L'animateur réseau (du franchiseur) assure : circulation infos, formations, visites, remontées terrain, événements collectifs, gestion des performances. La donnée et les KPI sont centraux. 88% des franchisés déclarent satisfaction. Vérifiez ce volet.",
+      tags: ["animation", "réseau", "support"],
+      source: "Mini-synthèse FFF + Webinaire pilotage par la donnée"
+    },
+    {
+      q: "Combien de temps pour créer/ouvrir une franchise ?",
+      a: "Préparation concept : 1-2 ans. Recrutement candidat : 3-6 mois. Formation + ouverture : 2-4 mois. Total : 18-36 mois en moyenne pour lancer un réseau viable (10-15 points). Vérifiez le timing du franchiseur.",
+      tags: ["timing", "délai", "développement"],
+      source: "Forum Franchise 2020 (CCI Lyon) + YouTube FFF"
+    },
+    {
+      q: "Le franchisé reste-t-il vraiment indépendant ?",
+      a: "Légalement oui, mais avec contraintes : respect du concept et cahier des charges, respect des royalties, participation à la vie du réseau obligatoire. Indépendance commerciale limitée, liberté contrôlée. Lisez le contrat.",
+      tags: ["indépendance", "autonomie", "obligations"],
+      source: "Service Public Entreprendre + Guide FFF 2025"
+    },
+    {
+      q: "Comment comparer deux enseignes de franchise ?",
+      a: "Grille : 1) Coût total + horizon rentabilité, 2) Charges récurrentes, 3) Solidité du réseau, 4) Qualité accompagnement, 5) CA/marge des points comparables, 6) Accès territorial, 7) Clauses de sortie (résiliation, retrait). Demandez références franchisés.",
+      tags: ["comparaison", "critères", "sélection"],
+      source: "TGS France + Cerca (rapport développement)"
+    },
+    {
+      q: "Quel financement pour une franchise ?",
+      a: "Apport personnel : 30-50% attendu (banque). Prêt pro : crédit bancaire classique. Dispositifs : Nacre (créateurs/repreneurs), garanties BPI, subventions régionales. Budget complet : apport + trésorerie. Étudiez les aides locales Réunion.",
+      tags: ["financement", "apport", "crédit", "aides"],
+      source: "Banque Populaire Franchise + Bpifrance Création"
+    },
+    {
+      q: "Quels indicateurs de performance suivre ?",
+      a: "KPI clés : CA mensuel, ticket moyen, fréquentation, marge brute, EBITDA, taux client fidèle, turnover équipe. L'animateur réseau doit vous aider. Tableau de bord obligatoire dans la plupart des réseaux modernes.",
+      tags: ["KPI", "performance", "pilotage", "indicateurs"],
+      source: "TGS France (pilotage réseau) + Webinaire FFF"
+    }
+  ];
+
+  const documentsData = [
+    {
+      name: "22e Enquête FFF 2026",
+      desc: "Données nationales : 400 franchisés, tendances marché, dynamiques collectives. Ressource de référence actualisée.",
+      url: "https://www.franchise-fff.com",
+      icon: "📊"
+    },
+    {
+      name: "Guide FFF 2025",
+      desc: "Définitions, fonctionnement franchise, choix réseau, compréhension des acteurs. Base généraliste.",
+      url: "https://www.franchise-fff.com",
+      icon: "📖"
+    },
+    {
+      name: "Les savoir-faire en franchise",
+      desc: "Formalisation, transmission tacite/explicite, performance et avantage concurrentiel. Cœur métier.",
+      url: "https://www.franchise-fff.com",
+      icon: "🎯"
+    },
+    {
+      name: "Certificat FFF - Animation réseau",
+      desc: "Compétences professionnelles attendues : analyse performance, accompagnement, circulation info.",
+      url: "https://www.franchise-fff.com",
+      icon: "🏆"
+    },
+    {
+      name: "Service Public - Obligations franchiseur/franchisé",
+      desc: "Cadre français : DIP, délai, obligations des parties, savoir-faire, assistance.",
+      url: "https://www.entreprendre.service-public.gouv.fr",
+      icon: "⚖️"
+    },
+    {
+      name: "Thèse - Contrôle des réseaux de service",
+      desc: "Académique : animation, contrôle, relation franchiseur-franchisé. Approche rigoureuse.",
+      url: "https://hal.univ-lorraine.fr",
+      icon: "📚"
+    },
+    {
+      name: "Webinaire FFF - Pilotage par la donnée",
+      desc: "Remontées terrain, homogénéité donnée, KPI, implication franchisés. Moderne et opérationnel.",
+      url: "https://www.franchise-fff.com",
+      icon: "📈"
+    },
+    {
+      name: "Observatoire de la Franchise",
+      desc: "Actualités quotidiennes, fiches enseignes, chiffres clés, tendances sectorielles, veille.",
+      url: "https://www.observatoiredelafranchise.fr",
+      icon: "🔍"
+    },
+    {
+      name: "Toute la Franchise",
+      desc: "Média spécialisé : annonces d'enseignes, recrutements, tendances, contenus pratiques.",
+      url: "https://www.toutelafranchise.com",
+      icon: "🗞️"
+    },
+    {
+      name: "TGS France - Pilotage réseau",
+      desc: "Données financières, RH, benchmark unités. Indicateurs et comparatifs.",
+      url: "https://www.tgsfrance.fr",
+      icon: "💼"
+    }
+  ];
+
+  function switchTab(sectionId, button) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(sectionId).classList.add('active');
+    button.classList.add('active');
+  }
+
+  function renderFAQ(filtered = null) {
+    const list = document.getElementById('faqList');
+    const noResults = document.getElementById('noResults');
+    const data = filtered || faqData;
+
+    list.innerHTML = '';
+
+    if (data.length === 0) {
+      noResults.style.display = 'block';
+      return;
+    }
+
+    noResults.style.display = 'none';
+
+    data.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'faq-item';
+      div.innerHTML = `
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <span>${item.q}</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>${item.a}</p>
+          ${item.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
+          <div class="source-text">
+            📚 Source : ${item.source || 'FFF'}
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function toggleFAQ(question) {
+    question.classList.toggle('open');
+    question.nextElementSibling.classList.toggle('open');
+  }
+
+  function renderDocuments() {
+    const list = document.getElementById('documentsList');
+    list.innerHTML = '';
+
+    documentsData.forEach(doc => {
+      const div = document.createElement('div');
+      div.className = 'document-item';
+      div.innerHTML = `
+        <div>
+          <div class="document-name">${doc.icon} ${doc.name}</div>
+          <div class="document-desc">${doc.desc}</div>
+        </div>
+        <a href="${doc.url}" target="_blank" class="download-btn" style="text-decoration: none;">
+          <i class="fas fa-external-link-alt"></i> Accéder
+        </a>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+
+
+  // Initialiser
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    if (query === '') {
+      renderFAQ();
+    } else {
+      const filtered = faqData.filter(item =>
+        item.q.toLowerCase().includes(query) ||
+        item.a.toLowerCase().includes(query) ||
+        item.tags.some(tag => tag.toLowerCase().includes(query))
+      );
+      renderFAQ(filtered);
+    }
+  });
+
+  renderFAQ();
+  renderDocuments();
+</script>
+
+</body>
+</html>
